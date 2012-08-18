@@ -1,0 +1,32 @@
+{
+  "name": "muskup-js",
+  "version": "0.1.0",
+  "description": "Mustache + coffeekup template to js-code compiler",
+  "main": "muskup-js.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:vol4ok/muskup-js.git"
+  },
+  "keywords": [
+    "muskup",
+    "mustache",
+    "hogan",
+    "coffeekup",
+    "partials",
+    "layout",
+    "template",
+    "engine"
+  ],
+  "author": "vol4ok",
+  "license": "MIT",
+  "dependencies": {
+    "hogan.js": ">=2.0.0",
+    "coffee-script": "1.x.x"
+  },
+  "devDependencies": {
+    "colors": "0.6.x"
+  }
+}
