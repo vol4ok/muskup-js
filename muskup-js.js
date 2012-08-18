@@ -24,47 +24,35 @@
 
   cache = {};
 
-  read = function(path, options, fn) {
+  read = function(path, options) {
     var ckExt, str, _ref;
     ckExt = (_ref = options.ck) != null ? _ref : '.ck';
     str = cache[path];
     if (options.cache && str) {
-      return fn(null, str);
+      return str;
     }
-    return $.readFile(path, 'utf8', function(err, str) {
-      if (err) {
-        return fn(err);
-      }
-      if ($.extname(path) === ckExt) {
-        str = ck.render(str);
-      }
-      if (options.cache) {
-        cache[path] = str;
-      }
-      return fn(null, str);
-    });
+    str = $.readFileSync(path, 'utf8');
+    if ($.extname(path) === ckExt) {
+      str = ck.render(str);
+    }
+    if (options.cache) {
+      cache[path] = str;
+    }
+    return str;
   };
 
-  render = function(path, opt, fn) {
-    if (typeof opt === "function") {
-      fn = opt;
+  render = function(path, opt) {
+    if (opt == null) {
       opt = {};
     }
     if (opt.asString == null) {
       opt.asString = true;
     }
-    return read(path, opt, function(err, str) {
-      var result;
-      if (err) {
-        return fn(err);
-      }
-      try {
-        result = hogan.compile(str, opt);
-        return fn(null, result);
-      } catch (err) {
-        return fn(err);
-      }
-    });
+    try {
+      return hogan.compile(read(path, opt), opt);
+    } catch (err) {
+      return null;
+    }
   };
 
   module.exports = render;

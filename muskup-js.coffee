@@ -11,27 +11,21 @@ ck = require './coffeekup'
 
 cache = {}
 
-read = (path, options, fn) ->
+read = (path, options) ->
   ckExt = options.ck ? '.ck'
   str = cache[path]
-  return fn(null, str) if (options.cache and str)
-  $.readFile path, 'utf8', (err, str) ->
-    return fn(err) if (err)
-    str = ck.render(str) if $.extname(path) is ckExt
-    cache[path] = str if (options.cache)
-    fn(null, str)
+  return str if (options.cache and str)
+  str = $.readFileSync(path, 'utf8')
+  str = ck.render(str) if $.extname(path) is ckExt
+  cache[path] = str if (options.cache)
+  return str
 
-render = (path, opt, fn) ->
-  if typeof opt == "function"
-    fn = opt
-    opt = {}
+render = (path, opt) ->
+  opt ?= {}
   opt.asString = yes unless opt.asString?
-  read path, opt, (err, str) ->
-    return fn(err) if (err)
-    try
-      result = hogan.compile(str, opt)
-      fn(null, result)            
-    catch err
-      fn(err)
+  try
+    return hogan.compile(read(path, opt), opt)
+  catch err
+    return null
 
 module.exports = render
